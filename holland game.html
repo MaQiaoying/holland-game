@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>环境守护者 · 霍兰德职业觉醒之旅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a2f2a 0%, #0a2a20 100%);
+            min-height: 100vh;
+            font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', system-ui, sans-serif;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(20, 50, 40, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(111,207,151,0.3);
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #1a4a3a, #0f3a2a);
+            padding: 20px 20px 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(111,207,151,0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #E8F5E9, #6FCF97);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subhead {
+            font-size: 12px;
+            color: #b8dfc5;
+        }
+
+        .progress-section {
+            padding: 16px 20px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #9ac7b0;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #1e4a3a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6fcf97, #2e8b57);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .main-content {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scene-card {
+            background: linear-gradient(145deg, #2a5a4a, #1a4a3a);
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(111,207,151,0.4);
+        }
+
+        .scene-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .scene-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #6fcf97;
+            margin-bottom: 8px;
+        }
+
+        .scene-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #E8F5E9;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: rgba(30, 70, 55, 0.9);
+            border: 1px solid rgba(111,207,151,0.4);
+            border-radius: 20px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:active {
+            transform: scale(0.98);
+            background: #3d8a6f;
+        }
+
+        .opt-icon {
+            font-size: 28px;
+            min-width: 48px;
+            text-align: center;
+        }
+
+        .opt-text {
+            font-size: 14px;
+            color: #F0F7F0;
+            line-height: 1.3;
+            flex: 1;
+        }
+
+        .result-card {
+            background: linear-gradient(145deg, #1e5a48, #0f3a2f);
+            border-radius: 28px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #6fcf97;
+            margin-bottom: 8px;
+        }
+
+        .holland-code {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #FFE6B0, #6FCF97);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 16px 0;
+        }
+
+        .type-name {
+            font-size: 16px;
+            color: #cfead9;
+            margin-bottom: 20px;
+        }
+
+        .hexagon-chart {
+            background: rgba(0,0,0,0.3);
+            border-radius: 24px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .chart-title {
+            font-size: 14px;
+            color: #6fcf97;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+        }
+
+        .dimension-scores {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .score-badge {
+            background: rgba(0,0,0,0.5);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .career-box {
+            background: rgba(111,207,151,0.12);
+            border-radius: 20px;
+            padding: 16px;
+            margin-top: 16px;
+            text-align: left;
+        }
+
+        .career-box h4 {
+            color: #6fcf97;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .career-box p {
+            font-size: 13px;
+            color: #cfead9;
+            line-height: 1.5;
+        }
+
+        .action-list {
+            margin-top: 12px;
+            padding-left: 20px;
+        }
+
+        .action-list li {
+            font-size: 12px;
+            color: #cfead9;
+            margin: 6px 0;
+        }
+
+        .restart-btn {
+            background: linear-gradient(95deg, #2E8B57, #1F6E43);
+            border: none;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+
+        .restart-btn:active {
+            transform: scale(0.97);
+        }
+
+        .app-footer {
+            padding: 14px;
+            text-align: center;
+            border-top: 1px solid rgba(111,207,151,0.2);
+            font-size: 10px;
+            color: #7fa892;
+        }
+
+        .main-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: #1e4a3a;
+            border-radius: 4px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: #6fcf97;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="app-header">
+        <div class="logo">
+            <div class="logo-icon">🌍</div>
+            <div class="logo-text">环境守护者</div>
+        </div>
+        <div class="subhead">霍兰德职业兴趣觉醒之旅</div>
+    </div>
+
+    <div class="progress-section">
+        <div class="progress-info">
+            <span>✨ 觉醒进度</span>
+            <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent"></div>
+
+    <div class="app-footer">
+        🌱 相邻类型易合作 · 相对类型需互补
+    </div>
+</div>
+
+<script>
+    const scenes = [
+        { icon: "🏛️", title: "环境守护者学院 · 入学典礼", desc: "你站在学院大门前，院长微笑着递给你一枚种子徽章：「每一位守护者都有独特的天赋。告诉我，你希望如何守护这片土地？」",
+          options: [
+            { icon: "🔧", text: "亲手修复受损的生态系统，用技术解决问题", scores: [2,0,0,0,0,0] },
+            { icon: "🔬", text: "深入研究环境问题的根源，用科学揭示真相", scores: [0,2,0,0,0,0] },
+            { icon: "🎨", text: "用艺术和故事唤醒人们对自然的热爱", scores: [0,0,2,0,0,0] },
+            { icon: "🤝", text: "帮助他人理解环保，成为社区的环境导师", scores: [0,0,0,2,0,0] },
+            { icon: "🚀", text: "领导环保项目，推动系统性变革", scores: [0,0,0,0,2,0] },
+            { icon: "📊", text: "建立环保数据系统，让管理井井有条", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "🌊", title: "被污染的河流", desc: "城郊的河水浑浊发臭，鱼群消失。岸边老渔夫叹息着望向河面。你决定采取行动。",
+          options: [
+            { icon: "🧪", text: "取水样检测，动手搭建简易净水装置", scores: [2,0,0,0,0,0] },
+            { icon: "📊", text: "沿河追踪污染源，建立污染扩散模型", scores: [0,2,0,0,0,0] },
+            { icon: "📸", text: "拍摄记录，创作河流的故事纪录片", scores: [0,0,2,0,0,0] },
+            { icon: "🗣️", text: "倾听村民诉求，组织清理活动", scores: [0,0,0,2,0,0] },
+            { icon: "🏛️", text: "联系政府和企业，推动污染治理", scores: [0,0,0,0,2,0] },
+            { icon: "📋", text: "建立污染监测档案和巡查制度", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "🧪", title: "深夜实验室", desc: "凌晨的实验室，数据显示某区域污染物浓度异常飙升。你需要做出判断。",
+          options: [
+            { icon: "⚙️", text: "重新校准仪器，亲自验证数据准确性", scores: [2,0,0,0,0,0] },
+            { icon: "📈", text: "深入分析数据，建立污染预警模型", scores: [0,2,0,0,0,0] },
+            { icon: "✨", text: "设计可视化图表，让问题一目了然", scores: [0,0,2,0,0,0] },
+            { icon: "🤝", text: "召集团队讨论，共同制定方案", scores: [0,0,0,2,0,0] },
+            { icon: "🎯", text: "立即决策，启动应急预案", scores: [0,0,0,0,2,0] },
+            { icon: "📑", text: "整理数据报告，按流程上报", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "🏞️", title: "湿地修复现场", desc: "这片湿地曾是候鸟天堂，如今干涸退化。修复团队需要你的方案。",
+          options: [
+            { icon: "🌱", text: "亲手种植水生植物，改造地形", scores: [2,0,0,0,0,0] },
+            { icon: "📐", text: "研究历史生态数据，科学规划修复", scores: [0,2,0,0,0,0] },
+            { icon: "🎨", text: "设计人与自然共生的景观", scores: [0,0,2,0,0,0] },
+            { icon: "👥", text: "组织志愿者，开展自然教育", scores: [0,0,0,2,0,0] },
+            { icon: "💼", text: "争取资金支持，扩大修复规模", scores: [0,0,0,0,2,0] },
+            { icon: "📊", text: "制定修复进度表，跟踪评估", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "🏫", title: "校园环保峰会", desc: "你被推选为校园环保项目负责人，有一笔启动资金需要规划。",
+          options: [
+            { icon: "♻️", text: "建立垃圾分类和旧物改造工坊", scores: [2,0,0,0,0,0] },
+            { icon: "📊", text: "开展碳足迹调研，数据驱动决策", scores: [0,2,0,0,0,0] },
+            { icon: "🎭", text: "策划环保艺术节，创意传播", scores: [0,0,2,0,0,0] },
+            { icon: "🤝", text: "组织环保社团联盟，扩大影响", scores: [0,0,0,2,0,0] },
+            { icon: "🚀", text: "制定商业计划，争取更多赞助", scores: [0,0,0,0,2,0] },
+            { icon: "📋", text: "建立项目管理制度和预算表", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "🌲", title: "森林村庄", desc: "村民对生态保护政策有些抵触，需要你与他们沟通协调。",
+          options: [
+            { icon: "🔧", text: "展示具体技术方案和收益", scores: [2,0,0,0,0,0] },
+            { icon: "📚", text: "用研究数据说明生态价值", scores: [0,2,0,0,0,0] },
+            { icon: "🎨", text: "用故事影像讲述森林故事", scores: [0,0,2,0,0,0] },
+            { icon: "❤️", text: "倾听诉求，寻找共赢方案", scores: [0,0,0,2,0,0] },
+            { icon: "🏛️", text: "协调政策资源，争取补偿", scores: [0,0,0,0,2,0] },
+            { icon: "📑", text: "建立沟通档案和反馈机制", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "💼", title: "环保企业面试", desc: "面试官：「你希望如何为环境事业创造价值？」",
+          options: [
+            { icon: "🏗️", text: "成为一线工程师，直接解决污染", scores: [2,0,0,0,0,0] },
+            { icon: "🔭", text: "加入研发团队，探索前沿技术", scores: [0,2,0,0,0,0] },
+            { icon: "📝", text: "做环境传播，让更多人了解", scores: [0,0,2,0,0,0] },
+            { icon: "🎓", text: "做环境教育，培养下一代", scores: [0,0,0,2,0,0] },
+            { icon: "📈", text: "推动企业可持续发展战略", scores: [0,0,0,0,2,0] },
+            { icon: "📊", text: "做环境数据分析与ESG报告", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "🎓", title: "导师的挑战", desc: "导师给你两个方向：前沿科研项目 vs 乡村环保教育。但你还有更多可能性。",
+          options: [
+            { icon: "🔧", text: "参与生态修复工程实践", scores: [2,0,0,0,0,0] },
+            { icon: "🔬", text: "投入前沿环境科研", scores: [0,2,0,0,0,0] },
+            { icon: "🎨", text: "创作环保科普作品", scores: [0,0,2,0,0,0] },
+            { icon: "🏫", text: "乡村环保教育支教", scores: [0,0,0,2,0,0] },
+            { icon: "🚀", text: "创业做环保科技公司", scores: [0,0,0,0,2,0] },
+            { icon: "📊", text: "做环境政策研究与分析", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "🌍", title: "全球守护者大会", desc: "来自全球的环境守护者齐聚，轮到你分享自己的故事。",
+          options: [
+            { icon: "🔧", text: "分享亲手完成的修复案例", scores: [2,0,0,0,0,0] },
+            { icon: "📈", text: "分享最新的研究发现", scores: [0,2,0,0,0,0] },
+            { icon: "🎨", text: "展示环保艺术作品", scores: [0,0,2,0,0,0] },
+            { icon: "🤝", text: "分享社区动员经验", scores: [0,0,0,2,0,0] },
+            { icon: "🏆", text: "分享领导项目的成功故事", scores: [0,0,0,0,2,0] },
+            { icon: "📊", text: "分享环境数据管理方法", scores: [0,0,0,0,0,2] }
+        ]},
+        { icon: "⭐", title: "觉醒时刻 · 终极抉择", desc: "光芒洒落，你即将觉醒为真正的环境守护者。如果有一种超能力，你希望是什么？",
+          options: [
+            { icon: "🔨", text: "修复之力：让受损生态瞬间恢复", scores: [2,0,0,0,0,0] },
+            { icon: "🔍", text: "洞察之眼：看清污染根源与规律", scores: [0,2,0,0,0,0] },
+            { icon: "✨", text: "创造之光：用艺术点亮环保意识", scores: [0,0,2,0,0,0] },
+            { icon: "❤️", text: "治愈之心：抚慰人与自然的关系", scores: [0,0,0,2,0,0] },
+            { icon: "⚡", text: "引领之翼：带领众人共同行动", scores: [0,0,0,0,2,0] },
+            { icon: "📊", text: "秩序之眼：让一切高效运转", scores: [0,0,0,0,0,2] }
+        ]}
+    ];
+
+    const types = [
+        { code: "R", name: "实际型", full: "🔧 实干守护者 · 动手实践", color: "#e34d4d", careers: "环境工程师、监测技术员、生态修复师、环保设备运维" },
+        { code: "I", name: "研究型", full: "🔬 科学守护者 · 探索真理", color: "#4a7db5", careers: "环境科研员、生态建模师、高校教师、气候变化研究员" },
+        { code: "A", name: "艺术型", full: "🎨 灵感守护者 · 创意表达", color: "#b573d6", careers: "环保记者、自然教育导师、生态摄影师、科普作家" },
+        { code: "S", name: "社会型", full: "🤝 联结守护者 · 温暖连接", color: "#5fb05f", careers: "环境教师、NGO项目官员、社区专员、环境社工" },
+        { code: "E", name: "企业型", full: "🚀 开拓守护者 · 影响推动", color: "#e8b34b", careers: "环保企业经理、绿色创业者、咨询项目经理、绿色金融" },
+        { code: "C", name: "常规型", full: "📊 秩序守护者 · 条理高效", color: "#8faaaf", careers: "环境数据分析师、ESG专员、审计师、行政管理人员" }
+    ];
+
+    let currentStep = 0;
+    let scores = [0, 0, 0, 0, 0, 0];
+    const mainContent = document.getElementById("mainContent");
+    const progressFill = document.getElementById("progressFill");
+    const progressPercent = document.getElementById("progressPercent");
+
+    function updateProgress() {
+        const percent = (currentStep / scenes.length) * 100;
+        progressFill.style.width = percent + "%";
+        progressPercent.textContent = Math.floor(percent) + "%";
+    }
+
+    function handleOption(selectedScores) {
+        for (let i = 0; i < 6; i++) scores[i] += selectedScores[i];
+        currentStep++;
+        updateProgress();
+        if (currentStep === scenes.length) renderResult();
+        else renderScene();
+    }
+
+    function getHollandCode() {
+        const indexed = scores.map((val, idx) => ({ val, idx, code: types[idx].code }));
+        indexed.sort((a, b) => b.val - a.val);
+        return indexed.slice(0, 3).map(item => item.code).join('');
+    }
+
+    function drawHexagon(ctx, width, height, data) {
+        const centerX = width/2, centerY = height/2;
+        const radius = Math.min(width, height) * 0.38;
+        const angles = Array(6).fill().map((_, i) => (Math.PI * 2 * i / 6) - Math.PI/2);
+        
+        ctx.clearRect(0, 0, width, height);
+        
+        [0.2, 0.4, 0.6, 0.8, 1.0].forEach(level => {
+            ctx.beginPath();
+            for (let i = 0; i <= 6; i++) {
+                const angle = angles[i % 6];
+                const x = centerX + radius * level * Math.cos(angle);
+                const y = centerY + radius * level * Math.sin(angle);
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = "rgba(100,200,150,0.3)";
+            ctx.stroke();
+        });
+        
+        for (let i = 0; i < 6; i++) {
+            const angle = angles[i];
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + radius * Math.cos(angle), centerY + radius * Math.sin(angle));
+            ctx.strokeStyle = "rgba(100,200,150,0.4)";
+            ctx.stroke();
+        }
+        
+        const maxScore = Math.max(...scores, 12);
+        const normalized = scores.map(s => (s / maxScore) * 0.9 + 0.05);
+        ctx.beginPath();
+        for (let i = 0; i <= 6; i++) {
+            const idx = i % 6;
+            const r = radius * Math.min(normalized[idx], 1);
+            const x = centerX + r * Math.cos(angles[idx]);
+            const y = centerY + r * Math.sin(angles[idx]);
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = "rgba(111,207,151,0.5)";
+        ctx.fill();
+        ctx.strokeStyle = "#6fcf97";
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+        
+        ctx.font = "bold 11px 'Segoe UI'";
+        ctx.fillStyle = "#CFEAD9";
+        for (let i = 0; i < 6; i++) {
+            const angle = angles[i];
+            const x = centerX + (radius + 20) * Math.cos(angle);
+            const y = centerY + (radius + 16) * Math.sin(angle);
+            ctx.fillText(types[i].code, x - 6, y + 4);
+        }
+    }
+
+    function renderResult() {
+        const code = getHollandCode();
+        const sorted = [...scores].map((v,i)=> ({v,i})).sort((a,b)=>b.v - a.v);
+        const primary = types[sorted[0].i];
+        const secondary = types[sorted[1].i];
+        
+        const canvasId = "hexagonCanvas";
+        const html = `
+            <div class="result-card">
+                <div class="result-icon">🏆 🌟 🌿</div>
+                <div class="result-title">觉醒完成！</div>
+                <div class="holland-code">${code}</div>
+                <div class="type-name">${primary.full}</div>
+                
+                <div class="hexagon-chart">
+                    <div class="chart-title">✨ 守护者六维星盘</div>
+                    <canvas id="${canvasId}" width="300" height="300" style="width:100%; max-width:280px; margin:0 auto; display:block;"></canvas>
+                    <div class="dimension-scores">
+                        ${types.map((t, i) => `<span class="score-badge" style="color:${t.color}">${t.code} ${scores[i]}分</span>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="career-box">
+                    <h4>🌱 你的环境守护者路径</h4>
+                    <p><strong style="color:#6fcf97">主导类型：${primary.full}</strong><br>${primary.careers}</p>
+                    <p style="margin-top:12px"><strong style="color:#6fcf97">次要倾向：${secondary.full}</strong><br>${secondary.careers}</p>
+                </div>
+                
+                <div class="career-box">
+                    <h4>📜 大一/大二行动指南</h4>
+                    <ul class="action-list">
+                        <li>• 加入与${primary.code}型匹配的社团/实验室</li>
+                        <li>• 选修相关技能课（GIS/数据分析/自然教育等）</li>
+                        <li>• 访谈一位该领域的环境守护者前辈</li>
+                        <li>• 完成一个小型实践项目，积累守护者徽章</li>
+                    </ul>
+                </div>
+                
+                <button class="restart-btn" id="restartBtn">🌱 重新开始 · 觉醒之旅</button>
+            </div>
+        `;
+        
+        mainContent.innerHTML = html;
+        
+        const canvas = document.getElementById(canvasId);
+        if (canvas) {
+            canvas.width = 280;
+            canvas.height = 280;
+            const ctx = canvas.getContext("2d");
+            drawHexagon(ctx, 280, 280, scores);
+        }
+        
+        document.getElementById("restartBtn")?.addEventListener("click", () => resetGame());
+        mainContent.scrollTop = 0;
+    }
+
+    function renderScene() {
+        const scene = scenes[currentStep];
+        const optionsHtml = scene.options.map((opt, idx) => `
+            <div class="option-btn" data-idx="${idx}">
+                <div class="opt-icon">${opt.icon}</div>
+                <div class="opt-text">${opt.text}</div>
+            </div>
+        `).join('');
+        
+        const html = `
+            <div class="scene-card">
+                <div class="scene-icon">${scene.icon}</div>
+                <div class="scene-title">${scene.title}</div>
+                <div class="scene-desc">${scene.desc}</div>
+            </div>
+            <div class="options-grid" id="optionsGrid">
+                ${optionsHtml}
+            </div>
+        `;
+        
+        mainContent.innerHTML = html;
+        
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.idx);
+                handleOption(scene.options[idx].scores);
+            });
+        });
+        mainContent.scrollTop = 0;
+    }
+
+    function resetGame() {
+        currentStep = 0;
+        scores = [0, 0, 0, 0, 0, 0];
+        updateProgress();
+        renderScene();
+    }
+
+    resetGame();
+</script>
+</body>
+</html>
